@@ -36,7 +36,7 @@ public class CommandsLib implements WrappedLuaLibrary {
 
         CommandManager manager = Allium.SERVER.getCommandManager();
         ServerCommandSource source = Allium.SERVER.getCommandSource();
-        return manager.execute(source, String.join(" ", args)) != 0;
+        return manager.executeWithPrefix(source, String.join(" ", args)) != 0;
     }
 
     @LuaIndex
@@ -49,7 +49,7 @@ public class CommandsLib implements WrappedLuaLibrary {
         CommandNode<?> node = dispatcher.findNode(Collections.singleton(command));
 
         if (node == null) return null;
-        else return (args) -> manager.execute(source, (command + " " + String.join(" ", args).trim())) != 0;
+        else return (args) -> manager.executeWithPrefix(source, (command + " " + String.join(" ", args).trim())) != 0;
     }
 
     @FunctionalInterface

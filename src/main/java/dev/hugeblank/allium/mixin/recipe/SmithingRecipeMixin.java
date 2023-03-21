@@ -4,13 +4,14 @@ import dev.hugeblank.allium.lua.api.recipe.RecipeLib;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.SmithingRecipe;
+import net.minecraft.recipe.SmithingTransformRecipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.squiddev.cobalt.LuaError;
 
-@Mixin(SmithingRecipe.class)
+@Mixin(SmithingTransformRecipe.class)
 public class SmithingRecipeMixin {
     @Shadow @Mutable @Final ItemStack result;
 

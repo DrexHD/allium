@@ -68,7 +68,6 @@ public final class UDFFunctions<T> extends VarArgFunction {
                 throw e;
             } else {
                 e.printStackTrace();
-                error = new StringBuilder(e.toString());
             }
         }
 

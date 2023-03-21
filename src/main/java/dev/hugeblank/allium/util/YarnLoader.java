@@ -127,7 +127,7 @@ public class YarnLoader {
     }
 
     private static class YarnVersion {
-        private static final String YARN_API_ENTRYPOINT = "https://meta.fabricmc.net/v2/versions/yarn/" + MinecraftVersion.create().getName();
+        private static final String YARN_API_ENTRYPOINT = "https://meta.fabricmc.net/v2/versions/yarn/" + MinecraftVersion.CURRENT.getName();
         private static String versionMemCache = null;
         public int build;
         public String version;

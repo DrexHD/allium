@@ -6,7 +6,7 @@
 
 -- Import java classes
 local Items = java.import("Items")
-local Registry = java.import("Registry")
+local Registries = java.import("Registries")
 local Identifier = java.import("Identifier")
 local SoundEvents = java.import("SoundEvents")
 local SoundCategory = java.import("SoundCategory")
@@ -14,12 +14,12 @@ local EquipmentSlot = java.import("EquipmentSlot")
 
 -- Return a function that we can modify while the game is playing
 events.BLOCK_INTERACT:register(script, function(state, world, pos, player, hand, hitResult)
-    local concrete = Registry.BLOCK:getId(state:getBlock()):getPath() -- Get the name of the block interacted with
+    local concrete = Registries.BLOCK:getId(state:getBlock()):getPath() -- Get the name of the block interacted with
     local mainHand = player:getEquippedStack(EquipmentSlot.MAINHAND) -- Get the main hand itemstack of the player
     -- Check if the block name has 'concrete_powder' in it, then check if the main hand is holding a water bottle
     if concrete:find("concrete_powder") and mainHand:isItemEqual(Items.POTION:getDefaultStack()) then
         -- Replace the powder block with the concrete variant
-        world:setBlockState(pos, Registry.BLOCK:get(Identifier("minecraft:"..concrete:gsub("_powder", ""))):getDefaultState())
+        world:setBlockState(pos, Registries.BLOCK:get(Identifier("minecraft:"..concrete:gsub("_powder", ""))):getDefaultState())
         -- Play the water bottle emptying sound effect
         world:playSound(nil, pos:getX(), pos:getY(), pos:getZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1, 1)
         if (not player:isCreative()) then -- If the player isn't in creative

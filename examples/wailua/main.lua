@@ -4,7 +4,8 @@
 -- This is a demonstration of how allium is not just for server sided use cases.
 local Text = java.import("net.minecraft.text.Text")
 local BlockPos = java.import("net.minecraft.util.math.BlockPos")
-local Registry = java.import("Registry")
+local Registries = java.import("Registries")
+
 
 local renderText -- The text to be shared between the render event and tick event
 
@@ -18,7 +19,7 @@ end)
 
 events.CLIENT_PLAYER_TICK:register(script, function(player)
     -- Finally, use the block to get the identifier of the block
-    local identifier = Registry.BLOCK:getId(
+    local identifier = Registries.BLOCK:getId(
     -- Use the position to get the state, then the block attributed to that state
             player.world:getBlockState(
             -- Convert position to an actual BlockPos

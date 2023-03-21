@@ -19,9 +19,12 @@ package dev.hugeblank.allium.loader.resources;
 
 import dev.hugeblank.allium.loader.Script;
 import net.minecraft.resource.AbstractFileResourcePack;
+import net.minecraft.resource.InputSupplier;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.InvalidIdentifierException;
+import net.minecraft.util.PathUtil;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,7 +64,7 @@ public class AlliumResourcePack extends AbstractFileResourcePack {
     }
 
     private AlliumResourcePack(String name, Map<Script, Path> paths, AutoCloseable closer) {
-        super(null);
+        super(name, true);
 
         this.name = name;
         this.basePaths = paths;
@@ -136,8 +139,8 @@ public class AlliumResourcePack extends AbstractFileResourcePack {
         return null;
     }
 
-    private static final String resPrefix = ResourceType.CLIENT_RESOURCES.getDirectory()+"/";
-    private static final String dataPrefix = ResourceType.SERVER_DATA.getDirectory()+"/";
+    private static final String resPrefix = ResourceType.CLIENT_RESOURCES.getDirectory() + "/";
+    private static final String dataPrefix = ResourceType.SERVER_DATA.getDirectory() + "/";
 
     private boolean hasAbsentNs(String filename) {
         int prefixLen;
@@ -159,7 +162,7 @@ public class AlliumResourcePack extends AbstractFileResourcePack {
         return !namespaces.get(type).contains(filename.substring(prefixLen, nsEnd));
     }
 
-    @Override
+    /*@Override
     protected InputStream openFile(String filename) throws IOException {
         if (filename.equals("pack.mcmeta")) {
             return AlliumResourcePack.class.getResourceAsStream("/assets/pack.mcmeta");
@@ -220,6 +223,64 @@ public class AlliumResourcePack extends AbstractFileResourcePack {
         }
 
         return ids;
+    }*/
+
+    @Nullable
+    @Override
+    public InputSupplier<InputStream> openRoot(String... segments) {
+        PathUtil.validatePath(segments);
+        String fileName = String.join("/", segments);
+        if (fileName.equals(PACK_METADATA_NAME)) {
+            return () -> AlliumResourcePack.class.getResourceAsStream("/assets/pack.mcmeta");
+        } else if (fileName.equals("pack.png")) {
+            return () -> AlliumResourcePack.class.getResourceAsStream("/assets/allium/icon.png");
+        }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
+        // TODO:
+        return null;
+    }
+
+    @Override
+    public void findResources(ResourceType type, String namespace, String prefix, ResultConsumer consumer) {
+        // TODO:
+
+        /*if (!namespaces.getOrDefault(type, Collections.emptySet()).contains(namespace)) {
+            return;
+        }
+
+        for (Map.Entry<Script, Path> basePath : basePaths.entrySet()) {
+            String separator = basePath.getValue().getFileSystem().getSeparator();
+            Path nsPath = basePath.getValue().resolve(type.getDirectory()).resolve(namespace);
+            Path searchPath = nsPath.resolve(prefix.replace("/", separator)).normalize();
+            if (!Files.exists(searchPath)) continue;
+
+            try {
+                Files.walkFileTree(searchPath, new SimpleFileVisitor<>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+                        String fileName = file.getFileName().toString();
+                        var id = new Identifier(namespace, nsPath.relativize(file).toString().replace(separator, "/"));
+
+                        if (!fileName.endsWith(".mcmeta")) {
+                            try {
+                                consumer.accept(id, InputSupplier.create(file));
+                            } catch (InvalidIdentifierException e) {
+                                LOGGER.error(e.getMessage());
+                            }
+                        }
+
+                        return FileVisitResult.CONTINUE;
+                    }
+                });
+            } catch (IOException e) {
+                LOGGER.warn("findResources at " + prefix + " in namespace " + namespace + ", script " + basePath.getKey().getId() + " failed!", e);
+            }
+        }*/
     }
 
     @Override

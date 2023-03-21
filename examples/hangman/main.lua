@@ -34,7 +34,7 @@ local function broadcast(context, text) -- easily broadcast a message to all pla
             :getWorld()
             :getServer()
             :getPlayerManager()
-            :broadcast(texts.parseSafe(text), MessageType.SYSTEM)
+            :broadcast(texts.parseSafe(text), false)
 end
 
 local builder = CommandManager.literal("hangman") -- Create the builder for the hangman command
