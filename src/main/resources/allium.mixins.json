@@ -8,6 +8,9 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "ArrayBackedScriptEventMixin",
+    "EventMixin",
+    "EventPhaseDataMixin",
     "MinecraftServerMixin",
     "PlayerManagerMixin",
     "block.AbstractBlockMixin",

@@ -2,7 +2,11 @@ package dev.hugeblank.allium.lua.type;
 
 import me.basiqueevangelist.enhancedreflection.api.EClass;
 import me.basiqueevangelist.enhancedreflection.api.EMethod;
+import me.basiqueevangelist.enhancedreflection.api.EType;
 import me.basiqueevangelist.enhancedreflection.api.typeuse.EClassUse;
+import dev.hugeblank.allium.loader.Script;
+import dev.hugeblank.allium.util.fapi.ArrayBackedScriptEvent;
+import net.fabricmc.fabric.api.event.Event;
 import org.squiddev.cobalt.LuaError;
 import org.squiddev.cobalt.LuaState;
 import org.squiddev.cobalt.Varargs;
@@ -40,7 +44,7 @@ public final class UDFFunctions<T> extends VarArgFunction {
             for (EMethod method : matches) { // For each matched method from the index call
                 var parameters = method.parameters();
                 try {
-                    var jargs = ArgumentUtils.toJavaArguments(state, args, boundReceiver == null && !isStatic ? 2 : 1, parameters);
+                    var jargs = toJavaArguments(instance, state, args, method);
 
                     if (jargs.length == parameters.size()) { // Found a match!
                         try { // Get the return type, invoke method, cast returned value, cry.
@@ -77,4 +81,25 @@ public final class UDFFunctions<T> extends VarArgFunction {
 
         throw new LuaError(error.toString());
     }
+
+    private Object[] toJavaArguments(T instance, LuaState state, Varargs args, EMethod method) throws InvalidArgumentException, LuaError {
+        if (instance instanceof ArrayBackedScriptEvent<?> && method.name().equals("allium$register")) {
+            return handleFabricApiRegisterEventArguments(state, args);
+        } else {
+            return ArgumentUtils.toJavaArguments(state, args, boundReceiver == null && !isStatic ? 2 : 1, method.parameters());
+        }
+    }
+
+    /**
+     * This is a temporary fix until method parameter generics issues are resolved.
+     * Specifically {@link dev.hugeblank.allium.lua.api.FabricAPIEventsLib#register(Script, Event, Object)} cannot be called from scripts.
+     */
+    private Object[] handleFabricApiRegisterEventArguments(LuaState state, Varargs args) throws InvalidArgumentException, LuaError {
+        EType eType = clazz.typeVariableValues().get(0);
+        return new Object[]{
+                TypeCoercions.toJava(state, args.arg(2), Script.class),
+                TypeCoercions.toJava(state, args.arg(3), eType.upperBound())
+        };
+    }
+
 }

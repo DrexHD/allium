@@ -4,6 +4,7 @@ import dev.hugeblank.allium.lua.api.*;
 import dev.hugeblank.allium.lua.api.PackageLib;
 import me.basiqueevangelist.enhancedreflection.api.EClass;
 import dev.hugeblank.allium.Allium;
+import dev.hugeblank.allium.lua.api.*;
 import dev.hugeblank.allium.lua.api.commands.CommandLib;
 import dev.hugeblank.allium.lua.api.commands.CommandsLib;
 import dev.hugeblank.allium.lua.api.http.HttpLib;
@@ -54,6 +55,7 @@ public class ScriptExecutor {
         globals.load( state, new CommandsLib(script) );
         globals.rawset( "script", TypeCoercions.toLuaValue(script, EClass.fromJava(Script.class)) );
         globals.load( state, new DefaultEventsLib() );
+        globals.load( state, new FabricAPIEventsLib() );
         globals.load( state, new FabricLib() );
         globals.load( state, new ConfigLib(script) );
         globals.load( state, new FsLib(script) );
