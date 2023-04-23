@@ -1,5 +1,6 @@
 -- Hangman
 -- By hugeblank - March 22, 2022
+-- By drex - Apr 24, 2023 (use fapi)
 -- A game of hangman, played in the chat. Use !hangman to start a game, add a letter or word after to start guessing.
 -- Derived from the original !hangman command in alpha, for allium-cc
 -- Source: https://github.com/hugeblank/Alpha/blob/master/alpha.lua#L354
@@ -7,6 +8,8 @@
 local words = require "words"
 local CommandManager = java.import("CommandManager") -- We need the java command manager for creating commands.
 local MessageType = java.import("network.message.MessageType") -- "net.minecraft." among other packages are auto-filled for you!
+local CommandRegistrationCallback = java.import("net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback")
+
 local arguments = command.arguments -- Create shortcut for command argument types
 
 local word
@@ -30,23 +33,14 @@ end
 
 local function broadcast(context, text) -- easily broadcast a message to all players
     context
-            :getSource()
-            :getWorld()
-            :getServer()
-            :getPlayerManager()
-            :broadcast(texts.parseSafe(text), false)
+        :getSource()
+        :getWorld()
+        :getServer()
+        :getPlayerManager()
+        :broadcast(texts.parseSafe(text), false)
 end
 
 local builder = CommandManager.literal("hangman") -- Create the builder for the hangman command
-
-events.COMMAND_REGISTER:register(script, function(_, name, success)
-    -- Let us know if the command was successfully registered
-    if success and name:find("hangman") then
-        print("/hangman command registered!")
-    elseif not success and name:find("hangman") then
-        print("/hangman command failed to register!")
-    end
-end)
 
 builder:executes(function(context) -- The part of the command with no values attached
     if word ~= nil then -- If there's a game being played tell the player to guess
@@ -57,13 +51,13 @@ builder:executes(function(context) -- The part of the command with no values att
         word = java.split(words[math.random(1, #words)], "")
         guessed = {} -- Create a table to mark guessed characters in the word
         for i = 1, #word do
-        guessed[i] = false
+            guessed[i] = false
         end
         guesses = 10 -- Give 10 guesses. Could be increased to reduce the difficulty.
         broadcast(context, string.format(
-                "Guess the word!\n<bold>%s</bold>\nYou have %d guesses. Good luck!",
-                parseGuess(),
-                guesses
+            "Guess the word!\n<bold>%s</bold>\nYou have %d guesses. Good luck!",
+            parseGuess(),
+            guesses
         ))
         return 1
     end
@@ -74,10 +68,10 @@ builder:m_then(CommandManager.argument("guess", arguments.string.word()):execute
     local playerName = context:getSource():getPlayer():getName():getString()
     local broadcastWin = function() -- easily broadcast win message
         broadcast(context, string.format(
-                        "<green>%s guessed the word! It was: <bold>%s</bold></green>",
-                        playerName,
-                        table.concat(word, "")
-                ))
+            "<green>%s guessed the word! It was: <bold>%s</bold></green>",
+            playerName,
+            table.concat(word, "")
+        ))
         word = nil -- Clear the word, ending the game
         guesses = 0
         return 1
@@ -118,18 +112,20 @@ builder:m_then(CommandManager.argument("guess", arguments.string.word()):execute
             broadcast(context, tostring(guesses)..s.." left")
         else -- No guesses left, game over!
             broadcast(context, string.format(
-                    "<red><bold>Game over!</bold> The word was: <bold>%s</bold></red>",
-                    table.concat(word, "")
+                "<red><bold>Game over!</bold> The word was: <bold>%s</bold></red>",
+                table.concat(word, "")
             ))
             word = nil
         end
     else -- No game, tell player how to start one
         context:getSource():sendFeedback(
-                texts.parseSafe("<red>No game! Use /hangman with no guess to start</red>"),
-                false
+            texts.parseSafe("<red>No game! Use /hangman with no guess to start</red>"),
+            false
         )
     end
     return 1
 end))
 
-command.register(builder) -- Register the command
+CommandRegistrationCallback.EVENT:register(script, function(dispatcher, registryAccess, environment)
+    dispatcher:register(builder)
+end)
