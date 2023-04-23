@@ -55,7 +55,6 @@ public class ScriptExecutor {
         globals.load( state, new CommandsLib(script) );
         globals.rawset( "script", TypeCoercions.toLuaValue(script, EClass.fromJava(Script.class)) );
         globals.load( state, new DefaultEventsLib() );
-        globals.load( state, new FabricAPIEventsLib() );
         globals.load( state, new FabricLib() );
         globals.load( state, new ConfigLib(script) );
         globals.load( state, new FsLib(script) );

@@ -1,7 +1,7 @@
-package dev.hugeblank.allium.mixin;
+package dev.hugeblank.allium.mixin.fabricapi;
 
-import dev.hugeblank.allium.util.fapi.ArrayBackedScriptEvent;
-import dev.hugeblank.allium.util.fapi.EventPhaseDataRemovable;
+import dev.hugeblank.allium.util.fabricapi.ArrayBackedScriptEvent;
+import dev.hugeblank.allium.util.fabricapi.EventPhaseDataRemovable;
 import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
@@ -14,21 +14,21 @@ import java.util.Objects;
 @Mixin(targets = "net.fabricmc.fabric.impl.base.event.ArrayBackedEvent")
 public abstract class ArrayBackedScriptEventMixin<T> extends Event<T> implements ArrayBackedScriptEvent<T> {
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private Object lock;
 
-    @Shadow
+    @Shadow(remap = false)
     @Final
     private Map<Identifier, Object> phases;
 
-    @Shadow
+    @Shadow(remap = false)
     protected abstract void rebuildInvoker(int newLength);
 
-    @Shadow
+    @Shadow(remap = false)
     private T[] handlers;
 
-    @Shadow
+    @Shadow(remap = false)
     public abstract void register(T listener);
 
     @Override

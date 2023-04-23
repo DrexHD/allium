@@ -1,12 +1,12 @@
 package dev.hugeblank.allium.lua.type;
 
+import dev.hugeblank.allium.loader.Script;
+import dev.hugeblank.allium.mixin.AlliumMixinPlugin;
+import dev.hugeblank.allium.util.fabricapi.ArrayBackedScriptEvent;
 import me.basiqueevangelist.enhancedreflection.api.EClass;
 import me.basiqueevangelist.enhancedreflection.api.EMethod;
 import me.basiqueevangelist.enhancedreflection.api.EType;
 import me.basiqueevangelist.enhancedreflection.api.typeuse.EClassUse;
-import dev.hugeblank.allium.loader.Script;
-import dev.hugeblank.allium.util.fapi.ArrayBackedScriptEvent;
-import net.fabricmc.fabric.api.event.Event;
 import org.squiddev.cobalt.LuaError;
 import org.squiddev.cobalt.LuaState;
 import org.squiddev.cobalt.Varargs;
@@ -35,8 +35,8 @@ public final class UDFFunctions<T> extends VarArgFunction {
     public Varargs invoke(LuaState state, Varargs args) throws LuaError {
         List<String> paramList = new ArrayList<>(); // String for displaying errors more smartly
         StringBuilder error = new StringBuilder("Could not find parameter match for called function \"" +
-            name + "\" for \"" + clazz.name() + "\"" +
-            "\nThe following are correct argument types:\n"
+                name + "\" for \"" + clazz.name() + "\"" +
+                "\nThe following are correct argument types:\n"
         );
 
         try {
@@ -83,7 +83,7 @@ public final class UDFFunctions<T> extends VarArgFunction {
     }
 
     private Object[] toJavaArguments(T instance, LuaState state, Varargs args, EMethod method) throws InvalidArgumentException, LuaError {
-        if (instance instanceof ArrayBackedScriptEvent<?> && method.name().equals("allium$register")) {
+        if (AlliumMixinPlugin.FABRIC_API_LOADED && instance instanceof ArrayBackedScriptEvent<?> && method.name().equals("allium$register")) {
             return handleFabricApiRegisterEventArguments(state, args);
         } else {
             return ArgumentUtils.toJavaArguments(state, args, boundReceiver == null && !isStatic ? 2 : 1, method.parameters());
@@ -91,8 +91,7 @@ public final class UDFFunctions<T> extends VarArgFunction {
     }
 
     /**
-     * This is a temporary fix until method parameter generics issues are resolved.
-     * Specifically {@link dev.hugeblank.allium.lua.api.FabricAPIEventsLib#register(Script, Event, Object)} cannot be called from scripts.
+     *
      */
     private Object[] handleFabricApiRegisterEventArguments(LuaState state, Varargs args) throws InvalidArgumentException, LuaError {
         EType eType = clazz.typeVariableValues().get(0);

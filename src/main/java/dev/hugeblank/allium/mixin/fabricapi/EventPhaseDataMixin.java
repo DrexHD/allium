@@ -1,6 +1,6 @@
-package dev.hugeblank.allium.mixin;
+package dev.hugeblank.allium.mixin.fabricapi;
 
-import dev.hugeblank.allium.util.fapi.EventPhaseDataRemovable;
+import dev.hugeblank.allium.util.fabricapi.EventPhaseDataRemovable;
 import org.apache.commons.lang3.ArrayUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(targets = "net.fabricmc.fabric.impl.base.event.EventPhaseData")
 public class EventPhaseDataMixin<T> implements EventPhaseDataRemovable<T> {
 
-    @Shadow
+    @Shadow(remap = false)
     T[] listeners;
 
     // returns true if it was removed

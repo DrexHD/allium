@@ -12,6 +12,7 @@ import java.util.Set;
 
 public class AlliumMixinPlugin implements IMixinConfigPlugin {
     public static final boolean QUILT_LOADED = FabricLoader.getInstance().isModLoaded("quilt_base");
+    public static final boolean FABRIC_API_LOADED = FabricLoader.getInstance().isModLoaded("fabric-api");
     public static final Logger LOGGER = LoggerFactory.getLogger("AlliumMixinPlugin");
 
     @Override
@@ -28,6 +29,8 @@ public class AlliumMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.contains(".fabric.")) {
             return !QUILT_LOADED;
+        } else if (mixinClassName.contains(".fabricapi.")){
+            return FABRIC_API_LOADED;
         } else {
             return true;
         }

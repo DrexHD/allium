@@ -1,4 +1,4 @@
-package dev.hugeblank.allium.util.fapi;
+package dev.hugeblank.allium.util.fabricapi;
 
 public interface ArrayBackedScriptEvent<T> {
 

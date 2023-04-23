@@ -8,9 +8,9 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "ArrayBackedScriptEventMixin",
-    "EventMixin",
-    "EventPhaseDataMixin",
+    "fabricapi.ArrayBackedScriptEventMixin",
+    "fabricapi.EventMixin",
+    "fabricapi.EventPhaseDataMixin",
     "MinecraftServerMixin",
     "PlayerManagerMixin",
     "block.AbstractBlockMixin",
