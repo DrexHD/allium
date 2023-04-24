@@ -2,10 +2,8 @@ package dev.hugeblank.allium.mixin;
 
 import com.mojang.datafixers.DataFixer;
 import dev.hugeblank.allium.Allium;
-import dev.hugeblank.allium.lua.api.DefaultEventsLib;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.resource.ResourcePackManager;
@@ -21,7 +19,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.net.Proxy;
-import java.util.function.BooleanSupplier;
 
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
@@ -46,10 +43,5 @@ public abstract class MinecraftServerMixin {
     @Inject(at = @At("TAIL"), method = "exit")
     private void exit(CallbackInfo ci) {
         Allium.SERVER = null;
-    }
-    
-    @Inject(at = @At("TAIL"), method = "tick")
-    private void tick(BooleanSupplier shouldKeepTicking, CallbackInfo ci) {
-        DefaultEventsLib.SERVER_TICK.invoker().onServerTick();
     }
 }

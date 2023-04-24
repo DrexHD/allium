@@ -51,10 +51,9 @@ public class ScriptExecutor {
         globals.load( state, new JavaLib() );
         globals.load( state, new TextLib() );
         globals.load( state, new NbtLib() );
-        globals.load( state, new CommandLib(script) );
+        globals.load( state, new CommandLib() );
         globals.load( state, new CommandsLib(script) );
         globals.rawset( "script", TypeCoercions.toLuaValue(script, EClass.fromJava(Script.class)) );
-        globals.load( state, new DefaultEventsLib() );
         globals.load( state, new FabricLib() );
         globals.load( state, new ConfigLib(script) );
         globals.load( state, new FsLib(script) );

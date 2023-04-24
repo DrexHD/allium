@@ -12,15 +12,10 @@
     "fabricapi.EventMixin",
     "fabricapi.EventPhaseDataMixin",
     "MinecraftServerMixin",
-    "PlayerManagerMixin",
-    "block.AbstractBlockMixin",
-    "command.CommandManagerMixin",
     "command.ReloadCommandMixin",
     "command.argument.ArgumentTypesMixin",
     "entity.EntityMixin",
     "entity.ServerPlayerEntityMixin",
-    "network.ServerPlayerEntityMixin",
-    "network.ServerPlayNetworkHandlerMixin",
     "recipe.AbstractCookingRecipeMixin",
     "recipe.CuttingRecipeMixin",
     "recipe.RecipeManagerMixin",
@@ -29,9 +24,5 @@
     "recipe.SmithingRecipeMixin",
     "recipe.fabric.RecipeManagerMixin",
     "resource.ResourcePackManagerMixin"
-  ],
-  "client": [
-    "client.gui.hud.InGameHudMixin",
-    "entity.ClientPlayerEntityMixin"
   ]
 }
