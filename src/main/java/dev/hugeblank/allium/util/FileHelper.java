@@ -9,9 +9,6 @@ import dev.hugeblank.allium.loader.Entrypoint;
 import dev.hugeblank.allium.loader.Manifest;
 import dev.hugeblank.allium.loader.Script;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.CustomValue;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +35,10 @@ public class FileHelper {
     public static final Path PERSISTENCE_DIR = FabricLoader.getInstance().getConfigDir().resolve(Allium.ID + "_persistence");
     public static final Path MAPPINGS_CFG_DIR = FabricLoader.getInstance().getConfigDir().resolve(Allium.ID + "_mappings");
     public static final String MANIFEST_FILE_NAME = "manifest.json";
+    public static final Gson MANIFEST_GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(Manifest.class, new Manifest.ManifestAdapter())
+            .registerTypeHierarchyAdapter(Entrypoint.class, new Entrypoint.EntrypointAdapter())
+            .create();
 
     public static Path getScriptsDirectory() {
         if (!Files.exists(SCRIPT_DIR)) {
@@ -69,7 +70,7 @@ public class FileHelper {
                 }
                 try {
                     BufferedReader reader = Files.newBufferedReader(path.resolve(MANIFEST_FILE_NAME));
-                    Manifest manifest = new Gson().fromJson(reader, Manifest.class);
+                    Manifest manifest = MANIFEST_GSON.fromJson(reader, Manifest.class);
                     out.add(new Script(manifest, path));
                 } catch (IOException e) {
                     Allium.LOGGER.error("Could not find " + MANIFEST_FILE_NAME  + " file on path " + scriptDir, e);
@@ -79,73 +80,6 @@ public class FileHelper {
             Allium.LOGGER.error("Could not read from scripts directory", e);
         }
         return out;
-    }
-
-    public static Set<Script> getValidModScripts() { // I have no idea if this works in production.
-        Set<Script> out = new HashSet<>();
-        FabricLoader.getInstance().getAllMods().forEach((container) -> {
-            if (container.getMetadata().getCustomValue("allium") != null) {
-                ModMetadata metadata = container.getMetadata();
-                try { // Let's see if the value we're after is an object
-                    CustomValue.CvObject value = metadata.getCustomValue("allium").getAsObject();
-                    Manifest man = makeManifest( // Make a manifest using the default values, use optional args otherwise.
-                            value,
-                            metadata.getId(),
-                            metadata.getVersion().getFriendlyString(),
-                            metadata.getName()
-                    );
-                    if (man == null || man.entrypoints().valid()) { // Make sure the manifest exists and has an entrypoint
-                        Allium.LOGGER.error("Could not read manifest from script with ID " + metadata.getId());
-                    } else {
-                        Script script = scriptFromContainer(man, container);
-                        if (script != null) {
-                            out.add(script);
-                        } else {
-                            Allium.LOGGER.error("Could not find entrypoint(s) for script with ID " + metadata.getId());
-                        }
-                    }
-                } catch (ClassCastException e) { // Not an object...
-                    try { // Maybe the value is an array?
-                        CustomValue.CvArray value = metadata.getCustomValue("allium").getAsArray();
-                        int i = 0; // Index for developer to debug their mistakes
-                        for (CustomValue v : value) { // For each array value
-                            try { // test for object
-                                CustomValue.CvObject obj = v.getAsObject();
-                                Manifest man = makeManifest(obj); // No optional arguments here.
-                                if (man.isComplete()) {
-                                    Script script = scriptFromContainer(man, container);
-                                    if (script != null) {
-                                        out.add(script);
-                                    }
-                                } else { // a value was missing. Be forgiving, and continue parsing
-                                    Allium.LOGGER.warn("Malformed manifest at index " + i + " of allium array block in " +
-                                            "fabric.mod.json of mod '" + metadata.getId() + "'");
-                                }
-                                i++;
-                            } catch (ClassCastException g) { // was not object. Be forgiving, and continue parsing
-                                Allium.LOGGER.warn("Expected object at index " + i + " of allium array block in " +
-                                        "fabric.mod.json of mod '" + metadata.getId() + "'");
-                            }
-                        }
-                    } catch (ClassCastException f) { // Not an array...!? Someone messed up.
-                        Allium.LOGGER.error("allium block for mod '" + metadata.getId() + "' not of type JSON Object or Array");
-                    }
-                }
-            }
-        });
-        return out;
-    }
-
-    private static Script scriptFromContainer( Manifest man, ModContainer container) {
-        final Script[] out = new Script[1];
-        container.getRootPaths().forEach((path) -> {
-            if (path.resolve(man.entrypoints().getStatic()).toFile().exists()) {
-                // This has an incidental safeguard in the event that if multiple root paths have the same script
-                // the most recent script loaded will just *overwrite* previous ones.
-                out[0] = new Script(man, path);
-            }
-        });
-        return out[0];
     }
 
     public static JsonElement getConfig(Script script) throws IOException {
@@ -166,23 +100,4 @@ public class FileHelper {
         outputStream.close();
     }
 
-    private static Manifest makeManifest(CustomValue.CvObject value) {
-        return makeManifest(value, null, null, null);
-    }
-
-    private static Manifest makeManifest(CustomValue.CvObject value, String optId, String optVersion, String optName) {
-        String id; String version; String name; CustomValue.CvObject entrypoint;
-
-        id = value.get("id") == null ? optId : value.get("id").getAsString();
-        version = value.get("version") == null ? optVersion : value.get("version").getAsString();
-        name = value.get("name") == null ? optName : value.get("name").getAsString();
-        entrypoint = value.get("entrypoints") == null ? null : value.get("entrypoints").getAsObject();
-        if (entrypoint != null && entrypoint.containsKey("static")) {
-            String eStatic = entrypoint.containsKey("static") ? entrypoint.get("static").getAsString() : null;
-            String eDynamic = entrypoint.containsKey("dynamic") ? entrypoint.get("dynamic").getAsString() : null;
-            return new Manifest(id, version, name, new Entrypoint(eStatic, eDynamic));
-        } else {
-            return null;
-        }
-    }
 }

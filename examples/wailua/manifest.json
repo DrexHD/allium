@@ -2,6 +2,10 @@
   "id": "wailua",
   "version": "1.0.0",
   "name": "WAILA in Lua",
+  "environment": "client",
+  "depends": {
+    "fabric-api": "*"
+  },
   "entrypoints": {
     "dynamic":"main.lua"
   }

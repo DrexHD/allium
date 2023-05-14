@@ -16,8 +16,10 @@ import dev.hugeblank.allium.loader.Script;
 import dev.hugeblank.allium.util.FileHelper;
 import dev.hugeblank.allium.util.Mappings;
 import dev.hugeblank.allium.util.docs.Generator;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.minecraft.SharedConstants;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -32,11 +34,9 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Allium implements ModInitializer {
 
@@ -106,8 +106,9 @@ public class Allium implements ModInitializer {
                 FabricLoader.getInstance().getGameDir().resolve("../examples")
         ));
         CANDIDATES.addAll(FileHelper.getValidDirScripts(FileHelper.getScriptsDirectory()));
-        CANDIDATES.addAll(FileHelper.getValidModScripts());
         list(new StringBuilder("Found: "), (script) -> true);
+        CANDIDATES.removeIf(script -> !script.getManifest().matchesRequirements());
+        list(new StringBuilder("Loading: "), (script) -> true);
         CANDIDATES.forEach(Script::initialize);
         list(new StringBuilder("Initialized: "), Script::isInitialized);
     }

@@ -2,6 +2,9 @@
   "id": "hangman",
   "version": "1.0.0",
   "name": "Hangman",
+  "depends": {
+    "fabric-api": "*"
+  },
   "entrypoints": {
     "static":"main.lua"
   }

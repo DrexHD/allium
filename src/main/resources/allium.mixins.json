@@ -8,14 +8,14 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "fabricapi.ArrayBackedScriptEventMixin",
-    "fabricapi.EventMixin",
-    "fabricapi.EventPhaseDataMixin",
     "MinecraftServerMixin",
     "command.ReloadCommandMixin",
     "command.argument.ArgumentTypesMixin",
     "entity.EntityMixin",
     "entity.ServerPlayerEntityMixin",
+    "fabricapi.ArrayBackedScriptEventMixin",
+    "fabricapi.EventMixin",
+    "fabricapi.EventPhaseDataMixin",
     "recipe.AbstractCookingRecipeMixin",
     "recipe.CuttingRecipeMixin",
     "recipe.RecipeManagerMixin",
