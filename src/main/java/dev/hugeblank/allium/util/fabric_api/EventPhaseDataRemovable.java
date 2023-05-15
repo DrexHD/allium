@@ -1,4 +1,4 @@
-package dev.hugeblank.allium.util.fabricapi;
+package dev.hugeblank.allium.util.fabric_api;
 
 public interface EventPhaseDataRemovable<T> {
 

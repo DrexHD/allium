@@ -1,9 +1,9 @@
-package dev.hugeblank.allium.mixin.fabricapi;
+package dev.hugeblank.allium.mixin.fabric_api;
 
 import dev.hugeblank.allium.loader.Script;
-import dev.hugeblank.allium.lua.api.FabricAPIEventsLib;
+import dev.hugeblank.allium.lua.api.EventsLib;
 import dev.hugeblank.allium.lua.type.annotation.LuaWrapped;
-import dev.hugeblank.allium.util.fabricapi.ScriptEvent;
+import dev.hugeblank.allium.util.fabric_api.ScriptEvent;
 import net.fabricmc.fabric.api.event.Event;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +19,7 @@ public abstract class EventMixin<T> implements ScriptEvent<T> {
     @LuaWrapped(name = "register")
     public void allium$register(Script script, T listener) {
         register(listener);
-        var handler = new FabricAPIEventsLib.FabricAPIEventHandler<>(script, (Event<T>) (Object) this, listener);
-        FabricAPIEventsLib.handlers.add(handler);
+        var handler = new EventsLib.FabricAPIEventHandler<>(script, (Event<T>) (Object) this, listener);
+        EventsLib.handlers.add(handler);
     }
 }

@@ -1,7 +1,7 @@
-package dev.hugeblank.allium.mixin.fabricapi;
+package dev.hugeblank.allium.mixin.fabric_api;
 
-import dev.hugeblank.allium.util.fabricapi.ArrayBackedScriptEvent;
-import dev.hugeblank.allium.util.fabricapi.EventPhaseDataRemovable;
+import dev.hugeblank.allium.util.fabric_api.ArrayBackedScriptEvent;
+import dev.hugeblank.allium.util.fabric_api.EventPhaseDataRemovable;
 import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;

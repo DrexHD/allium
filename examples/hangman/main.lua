@@ -1,14 +1,13 @@
 -- Hangman
 -- By hugeblank - March 22, 2022
--- By drex - Apr 24, 2023 (use fapi)
+-- By drex - Mai 15, 2023 (use architectury)
 -- A game of hangman, played in the chat. Use !hangman to start a game, add a letter or word after to start guessing.
 -- Derived from the original !hangman command in alpha, for allium-cc
 -- Source: https://github.com/hugeblank/Alpha/blob/master/alpha.lua#L354
 
 local words = require "words"
 local CommandManager = java.import("CommandManager") -- We need the java command manager for creating commands.
-local MessageType = java.import("network.message.MessageType") -- "net.minecraft." among other packages are auto-filled for you!
-local CommandRegistrationCallback = java.import("net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback")
+local CommandRegistrationEvent = java.import("CommandRegistrationEvent")
 
 local arguments = command.arguments -- Create shortcut for command argument types
 
@@ -126,6 +125,6 @@ builder:m_then(CommandManager.argument("guess", arguments.string.word()):execute
     return 1
 end))
 
-CommandRegistrationCallback.EVENT:register(script, function(dispatcher, registryAccess, environment)
+CommandRegistrationEvent.EVENT:register(script, function(dispatcher, registryAccess, environment)
     dispatcher:register(builder)
 end)

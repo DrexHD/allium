@@ -39,6 +39,8 @@ repositories {
 		name "Basique's Maven"
 		url "https://www.basique.top/maven"
 	}
+
+	maven { url "https://maven.shedaniel.me/" }
 }
 
 dependencies {
@@ -51,6 +53,14 @@ dependencies {
 	modImplementation include("me.basiqueevangelist:enhanced-reflection:${project.enhanced_reflections}")
 	modImplementation include("io.netty:netty-codec-http:4.1.77.Final")
 	modImplementation "eu.pb4:placeholder-api:${project.placeholder_api}"
+
+	// Required for adding (optional) fabric api event support
+	// Check https://maven.fabricmc.net/net/fabricmc/fabric-api/fabric-api-base/maven-metadata.xml
+	// for the latest release
+	modImplementation "net.fabricmc.fabric-api:fabric-api-base:0.4.26+fb8d95da7d"
+
+	// Required for adding (optional) architectury api event support
+	modImplementation "dev.architectury:architectury:8.1.80"
 
 
 	// Used for testing Scripts. No code in the repo should depend on these

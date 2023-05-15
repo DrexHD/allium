@@ -1,6 +1,6 @@
-package dev.hugeblank.allium.mixin.fabricapi;
+package dev.hugeblank.allium.mixin.fabric_api;
 
-import dev.hugeblank.allium.util.fabricapi.EventPhaseDataRemovable;
+import dev.hugeblank.allium.util.fabric_api.EventPhaseDataRemovable;
 import org.apache.commons.lang3.ArrayUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,7 +25,6 @@ public class EventPhaseDataMixin<T> implements EventPhaseDataRemovable<T> {
             return false;
         }
         listeners = ArrayUtils.remove(listeners, index);
-//        System.arraycopy(listeners, index + 1, listeners, index, listeners.length - 1 - index);
         return true;
     }
 

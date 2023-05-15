@@ -24,9 +24,14 @@ public class JavaLib implements WrappedLuaLibrary {
             "",
             "java.util.",
             "java.lang.",
+            "dev.architectury.event.",
+            "dev.architectury.event.events.client.",
+            "dev.architectury.event.events.common.",
+            "net.fabricmc.fabric.api",
             "net.minecraft.",
             "net.minecraft.item.",
             "net.minecraft.block.",
+            "net.minecraft.command.argument.",
             "net.minecraft.entity.",
             "net.minecraft.entity.player.",
             "net.minecraft.inventory.",
@@ -43,7 +48,8 @@ public class JavaLib implements WrappedLuaLibrary {
             "net.minecraft.server.command.",
             "net.minecraft.server.world.",
             "net.minecraft.server.network.",
-            "com.mojang."
+            "com.mojang.",
+            "com.mojang.brigadier.arguments.",
     };
 
     private static final Map<String, String> CACHED_AUTO_COMPLETE = new HashMap<>();

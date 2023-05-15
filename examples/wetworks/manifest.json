@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "name": "Wetworks",
   "depends": {
-    "fabric-api": "*"
+    "architectury": "*"
   },
   "entrypoints": {
     "dynamic": "wetworks.lua"

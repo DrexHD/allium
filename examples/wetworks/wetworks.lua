@@ -1,6 +1,6 @@
 -- Wetworks
 -- By hugeblank - March 22, 2022
--- By drex - Apr 24, 2023 (use fapi)
+-- By drex - Mai 15, 2023 (use architectury)
 -- Applies the 1.19 mud water bottle mechanic to concrete powder blocks
 -- This file is marked as a dynamic entrypoint in the manifest.json.
 -- Try modifying, and running /reload!
@@ -12,13 +12,12 @@ local Identifier = java.import("Identifier")
 local SoundEvents = java.import("SoundEvents")
 local SoundCategory = java.import("SoundCategory")
 local EquipmentSlot = java.import("EquipmentSlot")
-local ActionResult = java.import("ActionResult")
-local UseBlockCallback = java.import("net.fabricmc.fabric.api.event.player.UseBlockCallback")
+local EventResult = java.import("EventResult")
+local InteractionEvent = java.import("InteractionEvent")
 
 -- Return a function that we can modify while the game is playing
-
-UseBlockCallback.EVENT:register(script, function(player, world, hand, hitResult)
-    local pos = hitResult:getBlockPos() -- Get the position of the block interacted with
+InteractionEvent.RIGHT_CLICK_BLOCK:register(script, function(player, hand, pos, face)
+    local world = player:getWorld()
     local state = world:getBlockState(pos)
     local concrete = Registries.BLOCK:getId(state:getBlock()):getPath() -- Get the name of the block interacted with
     local mainHand = player:getEquippedStack(EquipmentSlot.MAINHAND) -- Get the main hand itemstack of the player
@@ -31,8 +30,8 @@ UseBlockCallback.EVENT:register(script, function(player, world, hand, hitResult)
         if (not player:isCreative()) then -- If the player isn't in creative
             mainHand:setCount(0) -- Remove the water bottle
             player:equipStack(EquipmentSlot.MAINHAND, Items.GLASS_BOTTLE:getDefaultStack()) -- Replace it with an empty glass bottle
-            return ActionResult.SUCCESS
+            return EventResult.interrupt(true)
         end
     end
-    return ActionResult.PASS
+    return EventResult.pass()
 end)

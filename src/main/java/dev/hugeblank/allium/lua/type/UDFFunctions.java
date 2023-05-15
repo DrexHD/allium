@@ -2,7 +2,8 @@ package dev.hugeblank.allium.lua.type;
 
 import dev.hugeblank.allium.loader.Script;
 import dev.hugeblank.allium.mixin.AlliumMixinPlugin;
-import dev.hugeblank.allium.util.fabricapi.ArrayBackedScriptEvent;
+import dev.hugeblank.allium.util.architectury_api.ScriptEventImpl;
+import dev.hugeblank.allium.util.fabric_api.ArrayBackedScriptEvent;
 import me.basiqueevangelist.enhancedreflection.api.EClass;
 import me.basiqueevangelist.enhancedreflection.api.EMethod;
 import me.basiqueevangelist.enhancedreflection.api.EType;
@@ -83,22 +84,26 @@ public final class UDFFunctions<T> extends VarArgFunction {
     }
 
     private Object[] toJavaArguments(T instance, LuaState state, Varargs args, EMethod method) throws InvalidArgumentException, LuaError {
-        if (AlliumMixinPlugin.FABRIC_API_LOADED && instance instanceof ArrayBackedScriptEvent<?> && method.name().equals("allium$register")) {
-            return handleFabricApiRegisterEventArguments(state, args);
-        } else {
-            return ArgumentUtils.toJavaArguments(state, args, boundReceiver == null && !isStatic ? 2 : 1, method.parameters());
+        if (method.name().equals("allium$register")) {
+            if (
+                    AlliumMixinPlugin.FABRIC_API_LOADED && instance instanceof ArrayBackedScriptEvent<?> ||
+                            AlliumMixinPlugin.ARCHITECTURY_API_LOADED && instance instanceof ScriptEventImpl<?>) {
+                return handleEventRegisterArguments(state, args);
+
+            }
         }
+        return ArgumentUtils.toJavaArguments(state, args, boundReceiver == null && !isStatic ? 2 : 1, method.parameters());
     }
 
-    /**
-     *
-     */
-    private Object[] handleFabricApiRegisterEventArguments(LuaState state, Varargs args) throws InvalidArgumentException, LuaError {
-        EType eType = clazz.typeVariableValues().get(0);
-        return new Object[]{
-                TypeCoercions.toJava(state, args.arg(2), Script.class),
-                TypeCoercions.toJava(state, args.arg(3), eType.upperBound())
-        };
+    private Object[] handleEventRegisterArguments(LuaState state, Varargs args) throws InvalidArgumentException, LuaError {
+        if (args.count() == 3) {
+            EType eType = clazz.typeVariableValues().get(0);
+            return new Object[]{
+                    TypeCoercions.toJava(state, args.arg(2), Script.class),
+                    TypeCoercions.toJava(state, args.arg(3), eType.upperBound())
+            };
+        }
+        throw new InvalidArgumentException();
     }
 
 }

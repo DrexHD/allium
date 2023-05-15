@@ -4,7 +4,7 @@
   "name": "WAILA in Lua",
   "environment": "client",
   "depends": {
-    "fabric-api": "*"
+    "architectury": "*"
   },
   "entrypoints": {
     "dynamic":"main.lua"
