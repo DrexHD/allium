@@ -37,7 +37,7 @@ repositories {
 	// Seems dead?
 	maven {
 		name "Basique's Maven"
-		url "https://www.basique.top/maven"
+		url "https://basique.top/maven"
 	}
 
 	maven { url "https://maven.shedaniel.me/" }
