@@ -13,7 +13,7 @@ import org.squiddev.cobalt.LuaError;
 public class ShapelessRecipeMixin {
     @Shadow @Mutable @Final String group;
 
-    @Shadow @Mutable @Final ItemStack output;
+    @Shadow @Mutable @Final ItemStack result;
 
     public void allium$setGroup(String group) throws LuaError {
         RecipeLib.assertInModifyPhase();
@@ -24,6 +24,6 @@ public class ShapelessRecipeMixin {
     public void allium$setOutput(ItemStack output) throws LuaError {
         RecipeLib.assertInModifyPhase();
 
-        this.output = output;
+        this.result = output;
     }
 }

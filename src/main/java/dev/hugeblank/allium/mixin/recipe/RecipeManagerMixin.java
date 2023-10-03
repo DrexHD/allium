@@ -3,7 +3,7 @@ package dev.hugeblank.allium.mixin.recipe;
 import com.google.gson.JsonElement;
 import dev.hugeblank.allium.lua.api.recipe.RecipeLib;
 import dev.hugeblank.allium.util.CursedMapUtil;
-import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.resource.ResourceManager;
@@ -24,9 +24,9 @@ import java.util.stream.Collectors;
 
 @Mixin(RecipeManager.class)
 public class RecipeManagerMixin {
-    @Shadow private Map<Identifier, Recipe<?>> recipesById;
+    @Shadow private Map<Identifier, RecipeEntry<?>> recipesById;
 
-    @Shadow private Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipes;
+    @Shadow private Map<RecipeType<?>, Map<Identifier, RecipeEntry<?>>> recipes;
 
     @Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/util/profiler/Profiler;)V", at = @At(value = "FIELD", target = "Lnet/minecraft/recipe/RecipeManager;recipesById:Ljava/util/Map;", shift = At.Shift.AFTER))
     private void makeByIdMapMutable(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler, CallbackInfo ci) {

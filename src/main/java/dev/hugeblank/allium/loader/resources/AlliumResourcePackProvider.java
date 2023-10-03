@@ -1,17 +1,14 @@
 package dev.hugeblank.allium.loader.resources;
 
-import net.minecraft.resource.ResourcePackProfile;
-import net.minecraft.resource.ResourcePackProvider;
-import net.minecraft.resource.ResourcePackSource;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.*;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
-import net.minecraft.util.Formatting;
 
 import java.util.function.Consumer;
 
 public class AlliumResourcePackProvider implements ResourcePackProvider {
 
+    private static final ResourcePack RESOURCE_PACK = new AlliumResourcePack();
     public static final ResourcePackSource ALLIUM_PACK_SOURCE = new ResourcePackSource() {
         @Override
         public Text decorate(Text packName) {
@@ -24,17 +21,18 @@ public class AlliumResourcePackProvider implements ResourcePackProvider {
         }
     };
 
+
     @Override
     public void register(Consumer<ResourcePackProfile> profileAdder) {
         // TODO: ResourceType should probably not always be SERVER_DATA
         profileAdder.accept(ResourcePackProfile.create(
-                "allium",
-                Text.literal("Allium (Scripts)"),
-                true,
-                factory -> AlliumResourcePack.create("Allium Generated"),
-                ResourceType.SERVER_DATA,
-                ResourcePackProfile.InsertionPosition.TOP,
-                ALLIUM_PACK_SOURCE
+            "allium",
+            Text.literal("Allium (Scripts)"),
+            true,
+            new AlliumPack(RESOURCE_PACK),
+            ResourceType.SERVER_DATA,
+            ResourcePackProfile.InsertionPosition.TOP,
+            ALLIUM_PACK_SOURCE
         ));
     }
 }

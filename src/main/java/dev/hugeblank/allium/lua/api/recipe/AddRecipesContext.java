@@ -4,8 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import dev.hugeblank.allium.lua.api.JsonLib;
 import dev.hugeblank.allium.lua.type.annotation.LuaWrapped;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeManager;
+import dev.hugeblank.allium.mixin.RecipeManagerAccessor;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import org.squiddev.cobalt.LuaError;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 @LuaWrapped
 public class AddRecipesContext extends RecipeContext {
-    public AddRecipesContext(Map<RecipeType<?>, Map<Identifier, Recipe<?>>> recipes, Map<Identifier, Recipe<?>> recipesById) {
+    public AddRecipesContext(Map<RecipeType<?>, Map<Identifier, RecipeEntry<?>>> recipes, Map<Identifier, RecipeEntry<?>> recipesById) {
         super(recipes, recipesById);
     }
 
@@ -27,7 +27,7 @@ public class AddRecipesContext extends RecipeContext {
 
     @LuaWrapped
     public void addRecipe(Identifier id, JsonObject el) throws LuaError {
-        addRecipe(id, RecipeManager.deserialize(id, el));
+        addRecipe(id, RecipeManagerAccessor.callDeserialize(id, el));
     }
 
     @LuaWrapped
@@ -36,12 +36,12 @@ public class AddRecipesContext extends RecipeContext {
     }
 
     @LuaWrapped
-    public void addRecipe(Identifier id, Recipe<?> recipe) throws LuaError {
+    public void addRecipe(Identifier id, RecipeEntry<?> recipe) throws LuaError {
         if (recipesById.put(id, recipe) != null) {
             throw new LuaError("recipe '" + id + "' already exists");
         }
 
-         recipes.computeIfAbsent(recipe.getType(), unused -> new HashMap<>()).put(id, recipe);
+         recipes.computeIfAbsent(recipe.value().getType(), unused -> new HashMap<>()).put(id, recipe);
     }
 
     public interface Handler {

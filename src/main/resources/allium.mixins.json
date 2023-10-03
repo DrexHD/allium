@@ -9,6 +9,7 @@
   },
   "mixins": [
     "MinecraftServerMixin",
+    "RecipeManagerAccessor",
     "architectury_api.EventImplMixin",
     "architectury_api.EventMixin",
     "command.ReloadCommandMixin",

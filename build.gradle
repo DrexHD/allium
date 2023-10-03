@@ -60,7 +60,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api-base:0.4.26+fb8d95da7d"
 
 	// Required for adding (optional) architectury api event support
-	modImplementation "dev.architectury:architectury:8.1.80"
+	modImplementation "dev.architectury:architectury:${project.architectury_api}"
 
 
 	// Used for testing Scripts. No code in the repo should depend on these

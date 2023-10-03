@@ -11,16 +11,16 @@ import org.squiddev.cobalt.LuaError;
 public class AbstractCookingRecipeMixin {
     @Shadow @Mutable @Final protected String group;
 
-    @Shadow @Mutable @Final protected Ingredient input;
+    @Shadow @Mutable @Final protected Ingredient ingredient;
 
-    @Shadow @Mutable @Final protected ItemStack output;
+    @Shadow @Mutable @Final protected ItemStack result;
 
     @Shadow @Mutable @Final protected float experience;
 
-    @Shadow @Mutable @Final protected int cookTime;
+    @Shadow @Mutable @Final protected int cookingTime;
 
     public Ingredient allium$getInput() {
-        return input;
+        return ingredient;
     }
 
     public void allium$setGroup(String group) throws LuaError {
@@ -32,13 +32,13 @@ public class AbstractCookingRecipeMixin {
     public void allium$setInput(Ingredient input) throws LuaError {
         RecipeLib.assertInModifyPhase();
 
-        this.input = input;
+        this.ingredient = input;
     }
 
     public void allium$setOutput(ItemStack output) throws LuaError {
         RecipeLib.assertInModifyPhase();
 
-        this.output = output;
+        this.result = output;
     }
 
     public void allium$setExperience(float experience) throws LuaError {
@@ -50,6 +50,6 @@ public class AbstractCookingRecipeMixin {
     public void allium$setCookTime(int cookTime) throws LuaError {
         RecipeLib.assertInModifyPhase();
 
-        this.cookTime = cookTime;
+        this.cookingTime = cookTime;
     }
 }

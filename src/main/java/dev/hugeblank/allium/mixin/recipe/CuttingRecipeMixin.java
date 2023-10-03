@@ -12,26 +12,26 @@ import org.squiddev.cobalt.LuaError;
 
 @Mixin(CuttingRecipe.class)
 public class CuttingRecipeMixin {
-    @Shadow @Mutable @Final protected Ingredient input;
+    @Shadow @Mutable @Final protected Ingredient ingredient;
 
-    @Shadow @Mutable @Final protected ItemStack output;
+    @Shadow @Mutable @Final protected ItemStack result;
 
     @Shadow @Mutable @Final protected String group;
 
     public Ingredient allium$getInput() {
-        return input;
+        return ingredient;
     }
 
     public void allium$setInput(Ingredient input) throws LuaError {
         RecipeLib.assertInModifyPhase();
 
-        this.input = input;
+        this.ingredient = input;
     }
 
     public void allium$setOutput(ItemStack output) throws LuaError {
         RecipeLib.assertInModifyPhase();
 
-        this.output = output;
+        this.result = output;
     }
 
     public void allium$setGroup(String group) throws LuaError {

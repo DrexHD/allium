@@ -3,7 +3,6 @@ package dev.hugeblank.allium.mixin.recipe;
 import dev.hugeblank.allium.lua.api.recipe.RecipeLib;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.SmithingRecipe;
 import net.minecraft.recipe.SmithingTransformRecipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
